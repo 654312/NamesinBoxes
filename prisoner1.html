@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>100 Prisoners - Names in Boxes Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="number"] {
+            width: 120px;
+            padding: 5px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>100 Prisoners - Names in Boxes</h1>
+
+<div class="card">
+    <p>
+        This page simulates the <b>cycle-following strategy</b> for the 100 prisoners problem.
+        Each prisoner starts with the box labeled with their own number and follows the chain of
+        names for at most <code>n/2</code> boxes.
+    </p>
+</div>
+
+<div class="card">
+    <label>
+        Number of prisoners:
+        <input id="prisoners" type="number" value="100" min="2" step="2">
+    </label>
+
+    <label>
+        Number of trials:
+        <input id="trials" type="number" value="10000" min="1">
+    </label>
+
+    <button onclick="runSimulation()">Run Simulation</button>
+
+    <div id="status"></div>
+    <div id="result"></div>
+</div>
+
+<script>
+    // Fisher–Yates shuffle
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Run a single trial
+    function runSingleTrial(n) {
+        const boxes = Array.from({length: n}, (_, i) => i);
+        shuffle(boxes);
+
+        const maxOpen = Math.floor(n / 2);
+
+        for (let p = 0; p < n; p++) {
+            let currentBox = p;
+            let found = false;
+
+            for (let step = 0; step < maxOpen; step++) {
+                if (boxes[currentBox] === p) {
+                    found = true;
+                    break;
+                }
+                currentBox = boxes[currentBox];
+            }
+
+            if (!found) return false;
+        }
+        return true;
+    }
+
+    function runSimulation() {
+        const n = parseInt(document.getElementById("prisoners").value);
+        const T = parseInt(document.getElementById("trials").value);
+        const statusDiv = document.getElementById("status");
+        const resultDiv = document.getElementById("result");
+
+        if (isNaN(n) || isNaN(T) || n <= 0 || T <= 0) {
+            resultDiv.textContent = "Please enter valid positive numbers.";
+            return;
+        }
+
+        if (n % 2 !== 0) {
+            resultDiv.textContent = "Number of prisoners must be even.";
+            return;
+        }
+
+        statusDiv.textContent = "Running simulation...(this may take a moment)";
+        resultDiv.textContent = "";
+
+        setTimeout(() => {
+            let successCount = 0;
+
+            for (let i = 0; i < T; i++) {
+                if (runSingleTrial(n)) successCount++;
+            }
+
+            const probability = (successCount / T) * 100;
+
+            statusDiv.textContent = "Finished!";
+            resultDiv.textContent =
+                `Successful trials: ${successCount} / ${T}  
+                → Approx. success probability: ${probability.toFixed(4)}%`;
+
+        }, 50);
+    }
+</script>
+
+</body>
+</html>
