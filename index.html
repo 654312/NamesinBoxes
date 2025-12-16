@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>100 Prisoners - Names in Boxes Simulation</title>
     <style>
         body {
-            font-family: "Cambria Math", sans-serif ;
+            font-family: "Cambria Math", sans-serif;
             max-width: 700px;
             margin: 20px auto;
             padding: 10px;
@@ -40,6 +40,7 @@
         #result {
             margin-top: 15px;
             font-weight: bold;
+            white-space: pre-line; 
         }
     </style>
 </head>
@@ -72,21 +73,30 @@
 </div>
 
 <script>
-    // Fisher–Yates shuffle
+    // Shuffle the array randomly
     function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+        for (let i = array.length - 1; i > 0; i--) {   // i > 0, not 1 > 0
+            const j = Math.floor(Math.random() * (i + 1)); // Math, not math
+            // swap array[i] and array[j]
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
     }
 
-    // Run a single trial
+    // Run one trial with n prisoners
     function runSingleTrial(n) {
-        const boxes = Array.from({length: n}, (_, i) => i);
+        // boxes = [0, 1, 2, ..., n-1]
+        const boxes = [];
+        for (let i = 0; i < n; i++) {
+            boxes.push(i);
+        }
+
         shuffle(boxes);
 
         const maxOpen = Math.floor(n / 2);
 
+        // Each prisoner tries
         for (let p = 0; p < n; p++) {
             let currentBox = p;
             let found = false;
@@ -99,9 +109,12 @@
                 currentBox = boxes[currentBox];
             }
 
-            if (!found) return false;
+            if (!found) {
+                return false; // this trial fails
+            }
         }
-        return true;
+
+        return true; // everyone succeeded
     }
 
     function runSimulation() {
@@ -110,38 +123,41 @@
         const statusDiv = document.getElementById("status");
         const resultDiv = document.getElementById("result");
 
-        if (isNaN(n) || isNaN(T) || n <= 0 || T <= 0) {
+        // Check inputs
+        if (n <= 0 || T <= 0) {  // T (capital), not t
             resultDiv.textContent = "Please enter valid positive numbers.";
+            statusDiv.textContent = "";
             return;
         }
 
         if (n % 2 !== 0) {
-            resultDiv.textContent = "Number of prisoners must be even.";
+            resultDiv.textContent = "The number of prisoners must be even.";
+            statusDiv.textContent = "";
             return;
         }
 
-        statusDiv.textContent = "Running simulation...(this may take a moment)";
+        statusDiv.textContent = "Running the simulation now... (this may take a moment)";
         resultDiv.textContent = "";
 
-        setTimeout(() => {
+        // Delay so the status text shows before heavy work
+        setTimeout(function () {
             let successCount = 0;
 
             for (let i = 0; i < T; i++) {
-                if (runSingleTrial(n)) successCount++;
+                if (runSingleTrial(n)) {
+                    successCount++;
+                }
             }
 
             const probability = (successCount / T) * 100;
-
+           
             statusDiv.textContent = "Finished!";
             resultDiv.textContent =
-                `Successful trials: ${successCount} / ${T}  
-                 Approx. success probability: ${probability.toFixed(4)}%`;
-
+                "Successful trials: " + successCount + " / " + T +
+                "Approx. success probability: " + probability.toFixed(4)+ "%";
         }, 50);
     }
 </script>
 
 </body>
 </html>
-
-
