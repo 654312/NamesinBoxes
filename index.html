@@ -71,10 +71,10 @@
 </div>
 
 <script>
-    // Shuffle the array randomly
+    
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {   // i > 0, not 1 > 0
-            const j = Math.floor(Math.random() * (i + 1)); // Math, not math
+            const j = Math.floor(Math.random() * (i + 1)); 
             // swap array[i] and array[j]
             const temp = array[i];
             array[i] = array[j];
@@ -82,7 +82,7 @@
         }
     }
 
-    // Run one trial with n prisoners
+  
     function runSingleTrial(n) {
         // boxes = [0, 1, 2, ..., n-1]
         const boxes = [];
@@ -94,7 +94,7 @@
 
         const maxOpen = Math.floor(n / 2);
 
-        // Each prisoner tries
+        
         for (let p = 0; p < n; p++) {
             let currentBox = p;
             let found = false;
@@ -121,7 +121,7 @@
         const statusDiv = document.getElementById("status");
         const resultDiv = document.getElementById("result");
 
-        // Check inputs
+      
         if (n <= 0 || T <= 0) {  // T (capital), not t
             resultDiv.textContent = "Please enter valid positive numbers.";
             statusDiv.textContent = "";
@@ -136,8 +136,7 @@
 
         statusDiv.textContent = "Running the simulation now... (this may take a moment)";
         resultDiv.textContent = "";
-
-        // Delay so the status text shows before heavy work
+        
         setTimeout(function () {
             let successCount = 0;
 
@@ -159,4 +158,5 @@
 
 </body>
 </html>
+
 
