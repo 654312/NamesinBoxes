@@ -49,9 +49,7 @@
 
 <div class="card">
     <p>
-        This page simulates the cycle-following strategy for the 100 prisoners problem.
-        Each prisoner starts with the box labeled with their own number and follows the chain of
-        names for at most <code>n/2</code> boxes.
+        This page simulates the cycle-following strategy for the Prisoners Dilemma problem. Each prisoner begins by opening the box with their own number and then follows the sequence of numbers for up to <code>n/2</code> box openings.
     </p>
 </div>
 
@@ -151,10 +149,10 @@
 
             const probability = (successCount / T) * 100;
            
-            statusDiv.textContent = "Finished!";
+            statusDiv.textContent = "simulation is Finished!";
             resultDiv.textContent =
-                "Successful trials: " + successCount + " / " + T +
-                "Approx. success probability: " + probability.toFixed(4)+ "%";
+                "Successful trials: " + successCount + " / " + T + "." +
+                "Approximately the success probability is " + probability.toFixed(4)+ "%" + ".";
         }, 50);
     }
 </script>
